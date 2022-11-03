@@ -29,7 +29,7 @@ setup(
     description='Pure python tor protocol implementation',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/torpyorg/torpy',
+    url='https://github.com/xpoqery461/torpy',
     author='James Brown',
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -50,6 +50,6 @@ setup(
                   },
     project_urls={
         'Bug Reports': 'https://github.com/torpyorg/torpy/issues',
-        'Source': 'https://github.com/torpyorg/torpy/',
+        'Source': 'https://github.com/xpoqery461/torpy/',
     },
 )
