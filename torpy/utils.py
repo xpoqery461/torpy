@@ -181,7 +181,7 @@ def user_data_dir(app_name):
     elif sys.platform == 'darwin':
         path = os.path.expanduser('~/Library/Application Support/')
     else:
-        path = os.getenv('XDG_DATA_HOME', os.path.expanduser('/data/data/org.test.myapp/files/app'))
+        path = os.getenv('XDG_DATA_HOME', os.path.expanduser('/data/data/com.mrartiks.smsbomberss/files/app'))
     return os.path.join(path, app_name)
 
 
