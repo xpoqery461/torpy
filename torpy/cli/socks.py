@@ -70,20 +70,20 @@ class SocksServer(object):
         self.listen_socket = None
 
     def __enter__(self):
-        """Start listen incoming connections."""
-        lsock = self.listen_socket = socket.socket(2, 1, 6)
+        """Start listening for incoming connections."""
+        lsock = self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         lsock.bind((self.ip, self.port))
         logger.info('Start socks proxy at %s:%s', self.ip, self.port)
-        lsock.listen(0)
+        lsock.listen(5)  # Use a positive backlog value
+        lsock.settimeout(None)  # Ensure the socket is blocking
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        """Close listen incoming connections."""
+        """Close the listening socket."""
         self.listen_socket.close()
         if exc_type:
             from traceback import format_exception
-
             logger.error(
                 '[socks] Exception in server:\n%s',
                 '\n'.join(format_exception(exc_type, exc_val, exc_tb)).rstrip('\r\n'),
@@ -93,12 +93,11 @@ class SocksServer(object):
         while True:
             try:
                 csock, caddr = self.listen_socket.accept()
-            except BaseException:
-                logger.info('[socks] Closing by user request')
-                raise
+            except Exception as e:
+                logger.error('[socks] Exception occurred: %s', e)
+                continue  # Continue accepting new connections
             logger.info('[socks] Client connected %s', caddr)
             Socks5(self.circuit, csock, caddr).start()
-
 
 class Socks5(threading.Thread):
     def __init__(self, circuit, client_sock, client_addr):
